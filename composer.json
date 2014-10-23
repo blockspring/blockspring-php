@@ -2,7 +2,7 @@
   "name": "blockspring/blockspring",
   "description": "Run Blockspring functions in your code.",
   "require": {
-    "php": ">=5.3.0",
-    "another-vendor/package": "0.1.0"
-  }
+    "php": ">=5.3.0"
+  },
+  "version": "0.1.0"
 }
