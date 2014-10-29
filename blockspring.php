@@ -14,7 +14,7 @@ class Blockspring {
     $api_key_string = $api_key ? "api_key=" . $api_key : '';
 
     $block_parts = explode("/", $block);
-    $block = $block_parts[1];
+    $block = end($block_parts);
 
     $blockspring_url = getenv('BLOCKSPRING_URL') ? getenv('BLOCKSPRING_URL') : 'https://sender.blockspring.com';
 
@@ -29,7 +29,13 @@ class Blockspring {
     $context = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
 
-    return $result;
+    try {
+      $body = json_decode($result);
+    } catch (Exception $e){
+      $body = $result;
+    }
+
+    return $body;
   }
 
   public static function define($my_function = null){
@@ -81,13 +87,11 @@ class BlockspringRequest {
 
             foreach ($stdin_params["_errors"] as $error) {
               // Make sure the error has a title.
-              if ($error["title"]) {
-                $this->addError($error["title"]);
+              if (is_array($error) && $error["title"]) {
+                $this->addError($error);
               }
             }
           } elseif (is_array($stdin_params[$key]) && $stdin_params[$key]["filename"]) {
-            // Handle Files
-            echo "HANDLING FILES \n";
 
             if ($stdin_params[$key]["data"] || $stdin_params[$key]["url"]) {
               // Create temp file
@@ -180,7 +184,7 @@ class BlockspringResponse {
   }
 
   public function addErrorOutput($title, $message = null) {
-    array_push($this->_errors, array("title" => $title, "message" => $message));
+    array_push($this->result["_errors"], array("title" => $title, "message" => $message));
   }
 
   public function end() {
