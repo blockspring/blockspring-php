@@ -16,16 +16,14 @@ Save the following script to an example.php file:
 
 require('blockspring.php');
 
-function hello_world($request, $response) {
+$hello_world = function ($request, $response) {
   $my_sum = $request->params["num1"] + $request->params["num2"];
 
   $response->addOutput("sum", $my_sum);
   $response->end();
-}
+};
 
-Blockspring::define(hello_world);
-
-?>
+Blockspring::define($hello_world);
 ```
 
 Then in your command line write:
