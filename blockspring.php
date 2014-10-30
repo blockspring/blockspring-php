@@ -76,7 +76,7 @@ class BlockspringRequest {
       }
 
       // Check if following blockspring spec
-      if ($stdin_params["_blockspring_spec"]) {
+      if (isset($stdin_params["_blockspring_spec"]) && $stdin_params["_blockspring_spec"]) {
         // We're following spec so lets remove _blockspring_spec, print errors to stderr, and parse files.
         foreach($stdin_params as $key => $val) {
           if ($key == "_blockspring_spec") {
