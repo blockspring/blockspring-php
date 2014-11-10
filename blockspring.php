@@ -176,9 +176,15 @@ class BlockspringResponse {
   }
 
   public function addFileOutput($name, $filepath) {
+    // hardcode csv mimetype
+    if (pathinfo($filepath, PATHINFO_EXTENSION) == "csv") {
+      $mime = "text/csv";
+    } else {
+      $mime = mime_content_type($filepath);
+    }
     $this->result[$name] = array(
       "filename" => pathinfo($filepath, PATHINFO_FILENAME),
-      "content-type" => mime_content_type($filepath),
+      "content-type" => $mime,
       "data" => base64_encode(file_get_contents($filepath))
     );
   }
