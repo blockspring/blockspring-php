@@ -116,7 +116,7 @@ class Blockspring {
     if (!isset($options["cache"])){
       $cache_string = "&cache=false";
     } else {
-      $cache_string = "&cache=true";
+      $cache_string = "&cache=" . ($options["cache"] ? "true" : "false");
     }
 
     # set up expiry flag.
@@ -183,7 +183,7 @@ class Blockspring {
     if (!isset($options["cache"])){
       $cache_string = "&cache=false";
     } else {
-      $cache_string = "&cache=true";
+      $cache_string = "&cache=" . ($options["cache"] ? "true" : "false");
     }
 
     # set up expiry flag.
