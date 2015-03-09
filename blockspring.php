@@ -88,8 +88,18 @@ class Blockspring {
     return $request;
   }
 
-  public static function run($block, $data = array(), $api_key = null) {
-    $api_key = $api_key ? $api_key : getenv('BLOCKSPRING_API_KEY');
+  public static function run($block, $data = array(), $options = array()) {
+    if (is_string($options)){
+      $options = array(
+        "api_key"=> $options,
+        "cache"=> false,
+        "expiry"=> null
+      );
+    }
+
+    if (!isset($options["api_key"])){
+      $options["api_key"] = null;
+    }
 
     // Data must be given as an array, or array of arrays (so it can be json_encoded).
     if (self::is_assoc($data)) {
@@ -98,14 +108,31 @@ class Blockspring {
       throw new Exception("your data needs to be a associative array.");
     }
 
-    $api_key_string = $api_key ? "api_key=" . $api_key : '';
+    # set up API key.
+    $api_key = $options["api_key"] or getenv('BLOCKSPRING_API_KEY') or null;
+    $api_key_string = $api_key ? "api_key=" . $api_key : "";
+
+    # set up cache flag.
+    if (!isset($options["cache"])){
+      $cache_string = "&cache=false";
+    } else {
+      $cache_string = "&cache=true";
+    }
+
+    # set up expiry flag.
+    if (isset($options["expiry"]) && $options["expiry"]){
+      $expiry_string = "&expiry=" . (string)$options["expiry"];
+    } else {
+      $expiry_string = "";
+    }
 
     $block_parts = explode("/", $block);
     $block = end($block_parts);
 
     $blockspring_url = getenv('BLOCKSPRING_URL') ? getenv('BLOCKSPRING_URL') : 'https://sender.blockspring.com';
 
-    $url = "{$blockspring_url}/api_v2/blocks/{$block}?{$api_key_string}";
+    $url = "{$blockspring_url}/api_v2/blocks/{$block}?{$api_key_string}" . $cache_string . $expiry_string;
+
     $options = array(
       'http' => array(
         'header'  => "Content-type: application/json",
@@ -115,7 +142,6 @@ class Blockspring {
       ),
     );
     $context = stream_context_create($options);
-
     $result = file_get_contents($url, false, $context);
 
     try {
@@ -129,8 +155,18 @@ class Blockspring {
     }
   }
 
-  public static function runParsed($block, $data = array(), $api_key = null) {
-    $api_key = $api_key ? $api_key : getenv('BLOCKSPRING_API_KEY');
+  public static function runParsed($block, $data = array(), $options = array()) {
+    if (is_string($options)){
+      $options = array(
+        "api_key"=> $options,
+        "cache"=> false,
+        "expiry"=> null
+      );
+    }
+
+    if (!isset($options["api_key"])){
+      $options["api_key"] = null;
+    }
 
     // Data must be given as an array, or array of arrays (so it can be json_encoded).
     if (self::is_assoc($data)) {
@@ -139,14 +175,31 @@ class Blockspring {
       throw new Exception("your data needs to be a associative array.");
     }
 
-    $api_key_string = $api_key ? "api_key=" . $api_key : '';
+    # set up API key.
+    $api_key = $options["api_key"] or getenv('BLOCKSPRING_API_KEY') or null;
+    $api_key_string = $api_key ? "api_key=" . $api_key : "";
+
+    # set up cache flag.
+    if (!isset($options["cache"])){
+      $cache_string = "&cache=false";
+    } else {
+      $cache_string = "&cache=true";
+    }
+
+    # set up expiry flag.
+    if (isset($options["expiry"]) && $options["expiry"]){
+      $expiry_string = "&expiry=" . (string)$options["expiry"];
+    } else {
+      $expiry_string = "";
+    }
 
     $block_parts = explode("/", $block);
     $block = end($block_parts);
 
     $blockspring_url = getenv('BLOCKSPRING_URL') ? getenv('BLOCKSPRING_URL') : 'https://sender.blockspring.com';
 
-    $url = "{$blockspring_url}/api_v2/blocks/{$block}?{$api_key_string}";
+    $url = "{$blockspring_url}/api_v2/blocks/{$block}?{$api_key_string}" . $cache_string . $expiry_string;
+
     $options = array(
       'http' => array(
         'header'  => "Content-type: application/json",
