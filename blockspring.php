@@ -109,7 +109,15 @@ class Blockspring {
     }
 
     # set up API key.
-    $api_key = $options["api_key"] or getenv('BLOCKSPRING_API_KEY') or null;
+    if (is_null($options["api_key"])){
+      if (!is_null(getenv('BLOCKSPRING_API_KEY'))){
+        $api_key = getenv('BLOCKSPRING_API_KEY');
+      } else {
+        $api_key = null;
+      }
+    } else {
+      $api_key = $options["api_key"];
+    }
     $api_key_string = $api_key ? "api_key=" . $api_key : "";
 
     # set up cache flag.
@@ -176,7 +184,15 @@ class Blockspring {
     }
 
     # set up API key.
-    $api_key = $options["api_key"] or getenv('BLOCKSPRING_API_KEY') or null;
+    if (is_null($options["api_key"])){
+      if (!is_null(getenv('BLOCKSPRING_API_KEY'))){
+        $api_key = getenv('BLOCKSPRING_API_KEY');
+      } else {
+        $api_key = null;
+      }
+    } else {
+      $api_key = $options["api_key"];
+    }
     $api_key_string = $api_key ? "api_key=" . $api_key : "";
 
     # set up cache flag.
