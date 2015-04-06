@@ -11,7 +11,7 @@ class Blockspring {
       $params = json_decode($input_params, true);
     }
 
-    if (!$params) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
       throw new Exception("STDIN was not valid JSON.");
     }
 
